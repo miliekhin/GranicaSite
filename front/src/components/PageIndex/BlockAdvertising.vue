@@ -16,6 +16,7 @@ export default {
   #id_big_advertising{
     padding: 10px 0;
     background: #191919;
+    overflow: hidden;
   }
 
 </style>

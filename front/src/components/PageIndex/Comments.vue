@@ -1,7 +1,7 @@
 <template>
   <div id="id_list" ref="comms_list" :class="!comments.length ? 'list_loading' : ''">
     <spinner is_grey="true" v-if="!comments.length"/>
-    <div v-else class="comment" v-for="(c, i) in comments" :ref="'c'+i">
+    <div v-else class="comment" v-for="(c, i) in comments" :ref="'c'+i" :key="current_day + i">
       <div class="comm_header">{{c.header}}</div>
       <div class="comm_txt">{{c.comment}}</div>
       <div class="comm_time">{{time(c.added)}}</div>
@@ -11,9 +11,11 @@
 
 <script>
 import Spinner from "../Spinner.vue"
+import {util} from "../../tools.js"
 export default {
   name: "Comments",
   components: {Spinner},
+  props: ['current_day'],
   data(){
     return{
       comments:[
@@ -35,18 +37,10 @@ export default {
 
       this.fetch_timer = setInterval(this.getComments, this.GET_COMMENTS_PERIOD)
     },
-    dateDiffInDays(a, b) {
-      // a and b are javascript Date objects
-      // Discard the time and time-zone information.
-      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-      return Math.floor((utc2 - utc1) / 86400000);
-    },
     time(in_time_str){
       let options = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
       let added = new Date(in_time_str)
-      let now = new Date()
-      let days_diff = this.dateDiffInDays(added, now)
+      let days_diff = util.dateDiffInDays( added, new Date() )
       let date_str = added.toLocaleString('ru-RU', options)
       let date = date_str.substr(0, 8)
       let time = date_str.substr(-5)

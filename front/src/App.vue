@@ -34,14 +34,14 @@
         <informer-wrapper :car_type="car_type" :is_inited="is_inited" :kpps="kppss" :current_day="current_day"/>
         <info-adder :is_inited="is_inited" :kpps="kppss"/>
       </div>
-      <div class="id_tip">* Абсолютная достоверность данных не гарантируется. </div>
+      <div class="id_tip">* Абсолютная достоверность данных не гарантируется</div>
       <div class="id_tip">* Страницу можно не обновлять - вся информация обновляется автоматически</div>
     </div>
   </div>
 
-<!--  <block-about/>-->
   <block-advertising/>
-  <block-comments/>
+  <block-comments :current_day="current_day"/>
+  <block-q-a/>
   <block-telegramma/>
   <block-donates/>
   <block-feedback/>
@@ -55,7 +55,7 @@ import KpButton from "./components/KpButton.vue"
 import InformerWrapper from "./components/InformerWrapper.vue"
 import ErrorPanel from "./components/ErrorPanel.vue"
 import InfoAdder from "./components/InfoAdder.vue"
-import BlockAbout from "./components/PageIndex/BlockAbout.vue"
+import BlockQA from "./components/PageIndex/BlockQA.vue"
 import BlockComments from "./components/PageIndex/BlockComments.vue"
 import BlockTelegramma from "./components/PageIndex/BlockTelegramma.vue"
 import BlockDonates from "./components/PageIndex/BlockDonates.vue"
@@ -67,7 +67,7 @@ export default {
   components:{
     BlockAdvertising,
     PopTip,
-    BlockAbout, BlockFooter, BlockFeedback, BlockDonates, BlockTelegramma, BlockComments, InfoAdder, KpButton,
+    BlockQA, BlockFooter, BlockFeedback, BlockDonates, BlockTelegramma, BlockComments, InfoAdder, KpButton,
     InformerWrapper, ErrorPanel},
   data(){
     return{
@@ -77,120 +77,6 @@ export default {
       next_day_timer: 0,
       current_day: 0, // для перерисовки дат после наступления нового дня
       kppss:[],
-      // kppss:[
-      //   {
-      //     id: 11111,
-      //     name: this.KPP_NAMES[0],
-      //     from_ldnr: true,
-      //     info:[
-      //       {
-      //         cars_num: 0,
-      //         car_type: 0,
-      //         added: '',
-      //       },
-      //       {
-      //         cars_num: 0,
-      //         car_type: 1,
-      //         added: '',
-      //       }
-      //     ],
-      //   },
-      //   {
-      //     id: 22222,
-      //     name: this.KPP_NAMES[0],
-      //     from_ldnr: false,
-      //     info:[
-      //       {
-      //         car_type: 0,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       },
-      //       {
-      //         car_type: 1,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       }
-      //     ],
-      //   },
-      //   {
-      //     id: 33333,
-      //     name: this.KPP_NAMES[1],
-      //     from_ldnr: true,
-      //     info:[
-      //       {
-      //         car_type: 0,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       },
-      //       {
-      //         car_type: 1,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       }
-      //     ],
-      //   },
-      //   {
-      //     id: 44444,
-      //     name: this.KPP_NAMES[1],
-      //     from_ldnr: false,
-      //     info:[
-      //       {
-      //         car_type: 0,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       },
-      //       {
-      //         car_type: 1,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       }
-      //     ],
-      //   },
-      //   {
-      //     id: 55555,
-      //     name: this.KPP_NAMES[2],
-      //     from_ldnr: true,
-      //     info:[
-      //       {
-      //         car_type: 0,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       },
-      //       {
-      //         car_type: 1,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       }
-      //     ],
-      //   },
-      //   {
-      //     id: 66666,
-      //     name: this.KPP_NAMES[2],
-      //     from_ldnr: false,
-      //     info:[
-      //       {
-      //         car_type: 0,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       },
-      //       {
-      //         car_type: 1,
-      //         cars_num: 0,
-      //         added: '',
-      //
-      //       }
-      //     ],
-      //   },
-      // ],
     }
   },
   created() {

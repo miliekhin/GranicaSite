@@ -27,13 +27,6 @@ export default {
     // console.log('line_info: ', this.line_info.info[this.car_type])
   },
   methods:{
-    // dateDiffInDays(a, b) {
-    //   // a and b are javascript Date objects
-    //   // Discard the time and time-zone information.
-    //   const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    //   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-    //   return Math.floor((utc2 - utc1) / 86400000);
-    // }
   },
   computed:{
     to(){

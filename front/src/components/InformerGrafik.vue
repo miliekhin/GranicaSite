@@ -6,7 +6,7 @@
        @mouseleave="hide_tip"
        :ref="'stolbec'+i"
   >
-    <div class="stolb-val-wrp">
+    <div class="stolb-val-wrp" :class="date_color(i, true)">
       <div class="stolb-val" :class="date_color(i)" :style="stolb_height(i)"/>
     </div>
     <div class="stolb-num">
@@ -45,9 +45,9 @@ export default {
       let t = el.getBoundingClientRect().top + window.scrollY
       this.emitter.emit('show_pop', {t, l, dt: this.grafik_info[i].added} )
     },
-    date_color(i){
+    date_color(i, wrp=false){
       let days = util.dateDiffInDays( new Date(this.grafik_info[i].added), new Date())
-      let class_name
+      let class_name = undefined
       switch (days) {
         case 0:
           class_name = 'day-color-today'
@@ -59,6 +59,7 @@ export default {
           class_name = 'day-color-old'
           break
       }
+      if (wrp) class_name += '-wrp'
       return class_name
     }
 
@@ -90,6 +91,15 @@ export default {
   .day-color-old{
     background: rgba(106, 180, 237, 0.38);
   }
+  .day-color-today-wrp{
+    background: rgba(255, 251, 0, 0.1);
+  }
+  .day-color-yesterday-wrp{
+    background: rgba(129, 176, 78, 0.1);
+  }
+  .day-color-old-wrp{
+    background: rgba(106, 180, 237, 0.1);
+  }
   .stolb-val-wrp:hover{
     border: 1px solid #aaa;
   }
@@ -97,7 +107,6 @@ export default {
     display: flex;
     align-items: flex-end;
     height: 42px;
-    background: #84848430;
     border: 1px solid transparent;
     transition: .2s;
   }
