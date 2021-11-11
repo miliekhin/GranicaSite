@@ -1,9 +1,10 @@
 <template>
-  <span :class="{isHovering}"
+  <button :class="{isHovering}"
         @click="isHovering=false"
         @mouseover="isHovering = true"
         @mouseout="isHovering = false"
-  >{{ text }}</span>
+          ref="bttn"
+  >{{ text }}</button>
 </template>
 
 <script>
@@ -16,11 +17,15 @@ export default {
       isHovering: false
     }
   },
-
+  methods:{
+    click(){
+      this.$refs.bttn.click();
+    }
+  }
 }
 </script>
 <style scoped>
-  span{
+  button{
     /*display: block;*/
     text-align: center;
     max-width: 320px;
@@ -30,12 +35,14 @@ export default {
     transition: .2s;
     user-select: none;
     font-size: .85em;
+    background-color: transparent;
+    color: inherit;
   }
-  span:hover{
+  button:hover{
     color: black;
     background-color: ghostwhite;
   }
-  span:active{
+  button:active{
     color: white;
     background-color: gray;
   }
