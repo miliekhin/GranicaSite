@@ -4,7 +4,7 @@
 
       <div id="id_teleg_head">
         <h6>TELEGRAM</h6>
-        <div class="under_h6">Заходите в наш Telegram канал, делитесь новостями с границы, и задавайте вопросы.</div>
+        <div class="under_h6">Заходите в наш Telegram канал, делитесь новостями с границы, и задавайте вопросы</div>
       </div>
       <div id="block_teleg_logo">
         <div id="img_wrp" @click="openTelegram">

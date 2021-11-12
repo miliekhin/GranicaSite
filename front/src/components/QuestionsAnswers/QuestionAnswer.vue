@@ -40,12 +40,21 @@ export default {
     width: 100%;
     margin-top: 20px;
   }
+  /*.qa-question:hover{*/
+  /*  color: black;*/
+  /*  background-color: ghostwhite;*/
+  /*}*/
+  /*.qa-question:active{*/
+  /*  color: white;*/
+  /*  background-color: gray;*/
+  /*}*/
   .qa-question{
     display: flex;
     border: 1px solid white;
     padding: 15px;
     align-items: center;
     cursor: pointer;
+    transition: .2s;
   }
   .q-txt{
     flex: 1;

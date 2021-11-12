@@ -50,7 +50,7 @@
           <div class="btn" v-if="isDeclarationSomeData" @click="showModalWnd('deleteDeclData')">УДАЛИТЬ ДАННЫЕ</div>
         </div>
         <div id="id_decl_hint">
-          &#10034; Данные декларации будут храниться только в этом браузере и на этом устройстве
+          &#10034; Данные декларации будут храниться только в этом браузере
         </div>
       </div>
 

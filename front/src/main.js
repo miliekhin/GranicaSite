@@ -1,8 +1,11 @@
 import { createApp } from 'vue'
+import router from './router'
 import App from './App.vue'
 import mitt from 'mitt'
 const emitter = mitt()
 const app = createApp(App)
+app.use(router)
+
 // console.log(app.config)
 
 app.config.globalProperties.DEBUG_MODE = (process.env.NODE_ENV === 'development')
@@ -19,3 +22,7 @@ else
 app.config.globalProperties.URL += '/api/v1/'
 
 app.mount('#app')
+
+window.onafterprint = function() {
+  router.go(-1)
+}

@@ -11,7 +11,7 @@ class KppshkaAdmin(admin.ModelAdmin):
     def added_time(self, info):
         tz = pytz.timezone("Europe/Moscow")
         dt = info.added.astimezone(tz)
-        fmt = '%d.%m.%Y_%H:%M'
+        fmt = '%H:%M_%d.%m.%Y'
         return dt.strftime(fmt)
 
     added_time.short_description = 'Добавлен'

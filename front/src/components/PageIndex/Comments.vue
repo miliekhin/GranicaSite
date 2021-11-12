@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Spinner from "../Spinner.vue"
+import Spinner from "./Info/Spinner.vue"
 import {util} from "../../tools.js"
 export default {
   name: "Comments",
