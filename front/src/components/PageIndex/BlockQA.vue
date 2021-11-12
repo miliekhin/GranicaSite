@@ -36,7 +36,7 @@
     margin-top: 20px;
     margin-bottom: 0;
     font-weight: 200;
-    color: #ff7da1;
+    color: #ff4679;
   }
   .under_h6{
     font-weight: 200;
