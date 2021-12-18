@@ -48,6 +48,7 @@
           </template>
         </modal-wnd>
 
+        <!--vue-mobile-detection library-->
         <img v-if="$isMobile()" class="img_decl" src="../Declaration/assets/declaration.png" alt="Бланк декларации" draggable="false">
         <router-link v-else id="img_lnk" :to="{ name: 'declaration', params:{ inputs } }">
           <img class="img_decl" src="../Declaration/assets/declaration.png" alt="Бланк декларации" draggable="false">
