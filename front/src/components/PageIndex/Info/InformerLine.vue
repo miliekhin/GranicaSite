@@ -30,7 +30,9 @@ export default {
   },
   computed:{
     to(){
-      return this.line_info.from_ldnr ? 'ДНР &rArr; РФ' : 'РФ &rArr; ДНР'
+      return this.line_info.from_ldnr ?
+          'ДНР <span class="icon-right-bold"></span> РФ' :
+          'РФ <span class="icon-right-bold"></span> ДНР';
     },
     car_type_index(){
       if (this.car_type === 'cars')
@@ -38,9 +40,6 @@ export default {
       if (this.car_type === 'trucks')
         return 1
     },
-    // trend(){
-    //   return this.info.trend_up ? '&utrif;' : '&dtrif;'
-    // },
     cars_info(){
       let ret = {}
       let grafik_arr_data_len
@@ -57,7 +56,6 @@ export default {
 </script>
 
 <style scoped>
-
   .line{
     display: flex;
     margin-top: 20px;

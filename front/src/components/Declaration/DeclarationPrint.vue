@@ -27,7 +27,7 @@ export default {
   div:deep(.page) {
     width: 210mm;
     min-height: 297mm;
-    padding: 15mm 20mm;
+    padding: 10mm 10mm 10mm 25mm;
     margin: 10mm auto;
     border: 1px #D3D3D3 solid;
     border-radius: 5px;

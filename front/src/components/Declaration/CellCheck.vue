@@ -1,7 +1,9 @@
 <template>
   <div id="id-wrp">
     <div id="id-txt" :class="grow">{{txt}}</div>
-    <div id="id-check">{{isChecked ? '&#9745;' : '&#9744;'}}</div>
+    <div id="id-check-empty">
+      <span v-if="isChecked" class="icon-check-2"></span>
+    </div>
   </div>
 </template>
 
@@ -34,9 +36,13 @@ export default {
   .grow{
     flex: 1;
   }
-  #id-check{
-    font-size: 18pt;
-    margin-left: 4px;
-    line-height: 18pt;
+  #id-txt{
+    margin-right: 7px;
+  }
+  #id-check-empty{
+    margin-top: 4px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid black;
   }
 </style>

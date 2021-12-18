@@ -1,3 +1,4 @@
+import './assets/fonts/styles.css'
 import { createApp } from 'vue'
 import router from './router'
 import App from './App.vue'
@@ -5,6 +6,9 @@ import mitt from 'mitt'
 const emitter = mitt()
 const app = createApp(App)
 app.use(router)
+
+import VueMobileDetection from 'vue-mobile-detection'
+app.use(VueMobileDetection)
 
 // console.log(app.config)
 

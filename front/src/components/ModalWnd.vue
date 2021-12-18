@@ -3,7 +3,7 @@
     <form>
       <header>
         <div id="id_htext">{{modalData.headText}}</div>
-        <div id="id_close" title="Закрыть" @click="$emit('closeModal')">&#10005;</div>
+        <div class="icon-cancel-squared" id="id_close" title="Закрыть" @click="$emit('closeModal')"></div>
       </header>
       <hr>
       <div id="id_form_body">
@@ -70,6 +70,7 @@ export default {
   #id_close{
     padding: 0 0 0 25px;
     margin-top: -21px;
+    margin-right: -3px;
     font-size: 1.5em;
     color: indianred;
     cursor: pointer;

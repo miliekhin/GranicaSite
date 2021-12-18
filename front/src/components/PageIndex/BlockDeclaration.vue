@@ -32,15 +32,25 @@
               Все данные введенные в форму таможенной декларации будут удалены!
             </p>
             <div v-if="modalData.eventName === 'notifyBeforePrint'">
-              <p>Рекомендуется еще раз внимательно проверить данные перед распечаткой деклараций.</p>
-              <p>Декларацию необходимо распечатать с обоих сторон листа, в двух экземплярах.</p>
-              <p>После распечатки декларации, пожалуйста не забудьте поставить число и подпись на обоих экземплярах.</p>
+              <p class="hint-item">
+                <span class="icon-check-2"></span>
+                Рекомендуется еще раз внимательно проверить данные перед распечаткой деклараций
+              </p>
+              <p class="hint-item">
+                <span class="icon-check-2"></span>
+                Декларацию необходимо распечатать с обоих сторон листа, в двух экземплярах
+              </p>
+              <p class="hint-item">
+                <span class="icon-check-2"></span>
+                После распечатки декларации, пожалуйста не забудьте поставить число и подпись на обоих экземплярах
+              </p>
             </div>
           </template>
         </modal-wnd>
 
-        <router-link id="img_lnk" :to="{ name: 'declaration', params:{ inputs } }">
-          <img id="id_img_decl" src="../Declaration/assets/declaration.png" alt="Бланк декларации" draggable="false">
+        <img v-if="$isMobile()" class="img_decl" src="../Declaration/assets/declaration.png" alt="Бланк декларации" draggable="false">
+        <router-link v-else id="img_lnk" :to="{ name: 'declaration', params:{ inputs } }">
+          <img class="img_decl" src="../Declaration/assets/declaration.png" alt="Бланк декларации" draggable="false">
         </router-link>
         <div id="id_decl_menu">
           <div class="btn" @click="showModalWnd('declarationForm')">ЗАПОЛНИТЬ</div>
@@ -50,7 +60,10 @@
           <div class="btn" v-if="isDeclarationSomeData" @click="showModalWnd('deleteDeclData')">УДАЛИТЬ ДАННЫЕ</div>
         </div>
         <div id="id_decl_hint">
-          &#10034; Данные декларации будут храниться только в этом браузере и на этом устройстве
+          <span class="icon-asterisk"></span> Данные декларации будут храниться только в этом браузере и на этом компьютере
+        </div>
+        <div id="mobile-view">
+          Заполнение и распечатка декларации недоступны на мобильном устройстве
         </div>
       </div>
 
@@ -254,6 +267,15 @@ export default {
 </script>
 
 <style scoped>
+  .hint-item{
+    display: flex;
+    align-items: center;
+  }
+  .icon-check-2{
+    color: limegreen;
+    font-size: 1.7em;
+    margin-right: 20px;
+  }
   h6{
     font-size: 2.5em;
     margin-top: 20px;
@@ -285,10 +307,10 @@ export default {
     line-height: 1.5em;
     color: white;
   }
-  #id_img_decl:hover{
+  .img_decl:hover{
     transform: scale(1.1);
   }
-  #id_img_decl{
+  .img_decl{
     margin-left: 50px;
     margin-right: 40px;
     cursor: pointer;
@@ -324,7 +346,20 @@ export default {
     font-weight: 300;
     margin: 20px 20px 0;
   }
+  #mobile-view{
+    display: none;
+    margin: 20px;
+    text-align: center;
+  }
 
+  @media only screen and (max-width: 1024px) {
+    #mobile-view{
+      display: block;
+    }
+    #id_decl_menu, #id_decl_hint{
+      display: none;
+    }
+  }
   @media only screen and (max-width: 768px) {
     #id_decl{
       flex-wrap: wrap;
@@ -358,9 +393,7 @@ export default {
     }
     img{
       width: 75%;
-    }
-    #id_img_decl{
-      margin: 0 0 33px;
+      margin-bottom: 35px;
     }
     .btn, .processing{
       margin-bottom: 31px;

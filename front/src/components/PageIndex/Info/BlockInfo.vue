@@ -31,8 +31,8 @@
         <informer-wrapper :car_type="car_type" :is_inited="is_inited" :kpps="kppss" :current_day="current_day"/>
         <info-adder :is_inited="is_inited" :kpps="kppss"/>
       </div>
-      <div class="id_tip">&#10034; Абсолютная достоверность данных не гарантируется</div>
-      <div class="id_tip">&#10034; Страницу можно не обновлять - вся информация обновляется автоматически</div>
+      <div class="id_tip"><span class="icon-asterisk"></span> Абсолютная достоверность данных не гарантируется</div>
+      <div class="id_tip"><span class="icon-asterisk"></span> Страницу можно не обновлять - вся информация обновляется автоматически</div>
     </div>
   </div>
   <pop-tip/>
