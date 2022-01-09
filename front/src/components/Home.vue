@@ -75,7 +75,6 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;800&display=swap');
 #app {}
 #id-home-page {
   font-family: Montserrat, sans-serif;
