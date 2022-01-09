@@ -47,9 +47,9 @@ export default {
       date_str.replace(',', '')
       let ret_str = ''
       if(!days_diff)
-        ret_str = time
+        ret_str = 'Сегодня ' + time
       if(days_diff === 1)
-        ret_str = 'Вчера' + ' ' + time
+        ret_str = 'Вчера ' + time
       if(days_diff > 1)
         ret_str = date + ' ' + time
 

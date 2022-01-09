@@ -360,6 +360,9 @@ export default {
     #id_decl_menu, #id_decl_hint{
       display: none;
     }
+    #block_decl{
+      justify-content: center;
+    }
   }
   @media only screen and (max-width: 768px) {
     #id_decl{
