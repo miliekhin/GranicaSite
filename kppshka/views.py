@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from config.settings import COMMENTS_FETCH_COUNT
 from django.shortcuts import render
+from django.http import JsonResponse
 
 
 def index(request):
@@ -26,7 +27,8 @@ class KppInfo(APIView):
         ksr = KppSerializerr(kpps, many=True)
         data = ksr.data
         # print(data)
-        return Response(data)
+        # return Response(data)
+        return JsonResponse(data, safe=False)
 
     def post(self, request):
         context = {
@@ -63,7 +65,6 @@ class Comments(APIView):
                 comment_len__gt=0,
                 comment_approved=True,
             ).order_by('-added')[:COMMENTS_FETCH_COUNT]
-            srzr = CommentsSerzr(qs, many=True)
         else:
             date = datetime.fromisoformat(after_date.replace("Z", "+00:00"))
             qs = Info.objects.annotate(comment_len=Length('comment')).filter(
@@ -72,6 +73,6 @@ class Comments(APIView):
                 added__gt=date,
                 comment_approved=True,
             ).order_by('-added')[:COMMENTS_FETCH_COUNT]
-            srzr = CommentsSerzr(qs, many=True)
 
+        srzr = CommentsSerzr(qs, many=True)
         return Response(srzr.data)

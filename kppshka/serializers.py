@@ -1,12 +1,26 @@
 from rest_framework import serializers
 from .models import Info, Kpp, Name
 from django.core.exceptions import ObjectDoesNotExist
-from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH
+from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH, CARS_MAX_WARNING
+import httpx
+
+
+def send_telegram_message(msg):
+    try:
+        url = 'https://api.telegram.org/bot5011564966:AAE7K4xuqF5weOVXxLcLiznqUSzDSmx70O4' \
+              '/sendMessage?chat_id=-560933712&text='
+        httpx.get(url + msg)
+    except httpx.RequestError:
+        print('An error occurred while requesting Telegram')
 
 
 def is_incoming_data_correct(validated_data):
-    if validated_data['cars_num'] >= CARS_MAX_COUNT:
+    cars = validated_data['cars_num']
+    if cars >= CARS_MAX_COUNT:
         return False
+
+    if cars >= CARS_MAX_WARNING:
+        send_telegram_message(f'КППШка: количество машин в запросе из формы {cars} превышает {CARS_MAX_WARNING}')
 
     comment = validated_data['comment']
     if any(['хуй' in comment, 'хуе' in comment, 'пизд' in comment, 'ёб' in comment, 'еба' in comment, ]):
@@ -39,9 +53,14 @@ class InfoParserSerializer(serializers.ModelSerializer):
         except ObjectDoesNotExist:
             raise serializers.ValidationError({'КПП не найден': validated_data["kpp_name"]})
 
+        cars = validated_data['cars_num']
+        if cars >= CARS_MAX_WARNING:
+            send_telegram_message(f'КППШка: количество машин в запросе '
+                                  f'телеграм-парсера {cars} превышает {CARS_MAX_WARNING}')
+
         inf = Info.objects.create(
             kpp=kpp,
-            cars_num=validated_data.get('cars_num'),
+            cars_num=cars,
             car_type=validated_data.get('car_type'),
             comment=validated_data.get('comment'),
             approved=True,
@@ -91,10 +110,14 @@ class InfoSerializer(serializers.ModelSerializer):
         if comment and len(comment) <= 4:
             comment = ''
 
+        car_type = validated_data['car_type']
+        cars = validated_data['cars_num']
+        send_telegram_message(f'КППШка: добавлен комент: {comment}; КПП: {kpp} ТИП: {car_type} МАШИН: {cars}')
+
         inf = Info.objects.create(
             kpp=kpp,
-            cars_num=validated_data['cars_num'],
-            car_type=validated_data['car_type'],
+            cars_num=cars,
+            car_type=car_type,
             comment=comment,
             approved=approved,
             comment_approved=not self.context['is_parser'],

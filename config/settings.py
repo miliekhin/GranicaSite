@@ -225,7 +225,13 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "https://kppshka.ru",
     "https://www.kppshka.ru",
-    "http://127.0.0.1:8765",
+    "http://localhost:3000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://kppshka.ru",
+    "https://www.kppshka.ru",
+    "http://localhost:3000",
 ]
 
 if DEBUG:
@@ -259,4 +265,5 @@ REST_FRAMEWORK = {
 
 COMMENTS_FETCH_COUNT = 32
 CARS_MAX_COUNT = 256
+CARS_MAX_WARNING = 77
 MAX_COMMENT_LENGTH = 256
