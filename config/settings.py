@@ -201,6 +201,8 @@ MANAGERS = ADMINS
 
 SERVER_EMAIL = 'КППШшка <info@kppshka.ru>'
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
+TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN')
+CHAT_ID = env('CHAT_ID')
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:

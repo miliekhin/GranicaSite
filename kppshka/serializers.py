@@ -1,25 +1,24 @@
 from rest_framework import serializers
 from .models import Info, Kpp, Name
 from django.core.exceptions import ObjectDoesNotExist
-from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH, CARS_MAX_WARNING
+from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH, CARS_MAX_WARNING, TELEGRAM_BOT_TOKEN, CHAT_ID
 import httpx
 
 
 def send_telegram_message(msg):
     try:
-        url = 'https://api.telegram.org/bot5011564966:AAE7K4xuqF5weOVXxLcLiznqUSzDSmx70O4' \
-              '/sendMessage?chat_id=-560933712&text='
-        httpx.get(url + msg)
+        url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-{CHAT_ID}&text={msg}'
+        httpx.get(url)
     except httpx.RequestError:
         print('An error occurred while requesting Telegram')
 
 
 def is_incoming_data_correct(validated_data):
     cars = validated_data['cars_num']
-    if cars >= CARS_MAX_COUNT:
+    if int(cars) >= CARS_MAX_COUNT:
         return False
 
-    if cars >= CARS_MAX_WARNING:
+    if int(cars) >= CARS_MAX_WARNING:
         send_telegram_message(f'КППШка: количество машин в запросе из формы {cars} превышает {CARS_MAX_WARNING}')
 
     comment = validated_data['comment']
@@ -54,7 +53,7 @@ class InfoParserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'КПП не найден': validated_data["kpp_name"]})
 
         cars = validated_data['cars_num']
-        if cars >= CARS_MAX_WARNING:
+        if int(cars) >= CARS_MAX_WARNING:
             send_telegram_message(f'КППШка: количество машин в запросе '
                                   f'телеграм-парсера {cars} превышает {CARS_MAX_WARNING}')
 
