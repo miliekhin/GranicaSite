@@ -111,7 +111,8 @@ class InfoSerializer(serializers.ModelSerializer):
 
         car_type = validated_data['car_type']
         cars = validated_data['cars_num']
-        send_telegram_message(f'КППШка: добавлен комент: {comment}; КПП: {kpp} ТИП: {car_type} МАШИН: {cars}')
+        if len(comment):
+            send_telegram_message(f'КППШка: добавлен комент: {comment}; КПП: {kpp} ТИП: {car_type} МАШИН: {cars}')
 
         inf = Info.objects.create(
             kpp=kpp,
