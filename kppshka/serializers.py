@@ -19,7 +19,11 @@ def is_incoming_data_correct(validated_data):
         return False
 
     if int(cars) >= CARS_MAX_WARNING:
-        send_telegram_message(f'КППШка: количество машин в запросе из формы {cars} превышает {CARS_MAX_WARNING}')
+        car_type = 'Легковые'
+        if int(validated_data['car_type']) == 1:
+            car_type = 'Грузовые'
+        msg = f'КППШка: количество машин в запросе из формы {cars} превышает {CARS_MAX_WARNING}. Тип: {car_type}'
+        send_telegram_message(msg)
 
     comment = validated_data['comment']
     if any(['хуй' in comment, 'хуе' in comment, 'пизд' in comment, 'ёб' in comment, 'еба' in comment, ]):
