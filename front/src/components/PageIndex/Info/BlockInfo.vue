@@ -149,22 +149,30 @@ export default {
         if( res_kpp ){
           local_kpp.id = res_kpp.id
           // console.log(local_kpp)
-          res_kpp.info.forEach((res_grafik_arr, i )=> {
-            // console.log(res_grafik_arr, i)
-            // console.log(res_grafik_arr[0])
-            if(res_grafik_arr){
-              res_grafik_arr.reverse()
-              res_grafik_arr.forEach((res_grafik, j) => {
+
+          let dataCars = res_kpp.data_cars;
+          if( dataCars ){
+            dataCars.reverse()
+              dataCars.forEach((res_grafik, j) => {
                 if( res_grafik ){
-                  // console.log(res_grafik)
-                  local_kpp.info[i][j].car_type = res_grafik.car_type
-                  local_kpp.info[i][j].cars_num = res_grafik.cars_num
-                  local_kpp.info[i][j].added = res_grafik.added
-                  // local_kpp.info[i].reverse()
+                  local_kpp.info[0][j].car_type = res_grafik.car_type
+                  local_kpp.info[0][j].cars_num = res_grafik.cars_num
+                  local_kpp.info[0][j].added = res_grafik.added
                 }
               })
-            }
-          })
+          }
+
+          let dataTrucks = res_kpp.data_trucks;
+          if( dataTrucks ){
+            dataTrucks.reverse()
+              dataTrucks.forEach((res_grafik, j) => {
+                if( res_grafik ){
+                  local_kpp.info[1][j].car_type = res_grafik.car_type
+                  local_kpp.info[1][j].cars_num = res_grafik.cars_num
+                  local_kpp.info[1][j].added = res_grafik.added
+                }
+              })
+          }
         }
       })
       // console.log(this.kppss)

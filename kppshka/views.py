@@ -12,7 +12,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from config.settings import COMMENTS_FETCH_COUNT
 from django.shortcuts import render
-from django.http import JsonResponse
 
 
 def index(request):
@@ -27,8 +26,7 @@ class KppInfo(APIView):
         ksr = KppSerializerr(kpps, many=True)
         data = ksr.data
         # print(data)
-        # return Response(data)
-        return JsonResponse(data, safe=False)
+        return Response(data)
 
     def post(self, request):
         context = {

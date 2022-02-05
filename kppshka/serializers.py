@@ -172,13 +172,10 @@ class KppSerializerr(serializers.ModelSerializer):
             'name': kpp.name.name,
             'from_ldnr': kpp.from_ldnr,
         }
-        lst = []
         cars = kpp.info.filter(car_type=0, approved=True).order_by('-added')[:8]
         trucks = kpp.info.filter(car_type=1, approved=True).order_by('-added')[:8]
-        lst.append(get_info_data(cars))
-        lst.append(get_info_data(trucks))
-        # print(lst)
-        kpp_obj['info'] = lst
+        kpp_obj['data_cars'] = get_info_data(cars)
+        kpp_obj['data_trucks'] = get_info_data(trucks)
         return kpp_obj
 
 

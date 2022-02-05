@@ -105,9 +105,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'kppshka',
-        'USER': 'kppshka',
-        'PASSWORD': env('DB_PWD'),
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': 'localhost' if DEBUG else 'postgres_kppshka',
         'PORT': '5432',  # Set to empty string for default.
     }
