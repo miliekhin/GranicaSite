@@ -24,9 +24,8 @@ class KppInfo(APIView):
     def get(self, request):
         kpps = Kpp.objects.prefetch_related('info').select_related('name')
         ksr = KppSerializerr(kpps, many=True)
-        data = ksr.data
-        # print(data)
-        return Response(data)
+        # print(ksr.data)
+        return Response(ksr.data)
 
     def post(self, request):
         context = {
