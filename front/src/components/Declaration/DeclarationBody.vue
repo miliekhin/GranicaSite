@@ -179,7 +179,6 @@ export default {
   },
   methods:{
     fillDeclaration( arr ){
-      this.fields.fromCountry = 'Украина';
       this.fields.cargo = true;
       this.fields.tempImport = true;
       this.fields.vehicle = true;
