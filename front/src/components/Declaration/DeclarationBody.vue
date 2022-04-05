@@ -101,25 +101,25 @@
           <cell :txt="fields.engineVolume" under="рабочий объем двигателя (см3)" narrow="2"/>
         </div>
         <div class="multi-cell">
-          <cell :txt="fields.carVIN" under="номер кузова"/>
-          <cell txt="" under="номер шасси"/>
+          <cell :txt="fields.numUnused" under="номер кузова"/>
+          <cell :txt="fields.numUnused" under="номер шасси"/>
           <cell :txt="fields.carYear" under="дата изготовления" narrow="2"/>
           <cell :txt="spacedCost(fields.carCost)" under="стоимость" narrow="1"/>
         </div>
         <div class="multi-cell">
           <div class="mc-txt">Водное судно</div>
-          <cell txt="" under="вид"/>
-          <cell txt="" under="регистрационный номер, страна регистрации"/>
-          <cell txt="" under="стоимость"/>
-          <cell txt="" under="масса (кг)" narrow="2"/>
-          <cell txt="" under="длина корпуса (м)" narrow="2"/>
+          <cell :txt="fields.mDash" under="вид"/>
+          <cell :txt="fields.mDash" under="регистрационный номер, страна регистрации"/>
+          <cell :txt="fields.mDash" under="стоимость"/>
+          <cell :txt="fields.mDash" under="масса (кг)" narrow="2"/>
+          <cell :txt="fields.mDash" under="длина корпуса (м)" narrow="2"/>
         </div>
         <div class="multi-cell">
           <div class="mc-txt">Воздушное судно</div>
-          <cell txt="" under="вид"/>
-          <cell txt="" under="регистрационный номер, страна регистрации"/>
-          <cell txt="" under="стоимость"/>
-          <cell txt="" under="масса пустого снаряженного аппарата (кг)"/>
+          <cell :txt="fields.mDash" under="вид"/>
+          <cell :txt="fields.mDash" under="регистрационный номер, страна регистрации"/>
+          <cell :txt="fields.mDash" under="стоимость"/>
+          <cell :txt="fields.mDash" under="масса пустого снаряженного аппарата (кг)"/>
         </div>
         <div style="margin-bottom: -9px">Часть транспортного средства, замененная в государстве, не являющемся членом ЕАЭС,</div>
         <div class="multi-cell">
@@ -182,6 +182,8 @@ export default {
       this.fields.cargo = true;
       this.fields.tempImport = true;
       this.fields.vehicle = true;
+      this.fields.numUnused = 'ОТСУТСТВУЕТ';
+      this.fields.mDash = '—';
       for ( let a of arr){
         this.fields[a.localStorageKey] = localStorage.getItem(a.localStorageKey);
       }
@@ -190,7 +192,7 @@ export default {
     spacedCost(digit){
       let cost = util.formatDigitSpaceSeparated(digit);
       if( cost ){
-        cost += ' руб.';
+        cost += ' РУБ';
       }
       return cost;
     },
