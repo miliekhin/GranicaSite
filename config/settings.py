@@ -56,10 +56,11 @@ ROOT_URLCONF = 'config.urls'
 
 STATIC_URL = '/assets/'
 STATIC_ROOT = BASE_DIR / 'templates/front/assets'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [
-    BASE_DIR / "templates/front",
-]
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 TEMPLATES = [
     {
