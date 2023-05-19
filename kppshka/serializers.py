@@ -60,6 +60,7 @@ class InfoParserSerializer(serializers.ModelSerializer):
         except ObjectDoesNotExist:
             raise serializers.ValidationError({'КПП не найден': validated_data["kpp_name"]})
 
+        print('validated_data.get("cars_num")', validated_data.get('cars_num'))
         cars = validated_data.get('cars_num')
         comment = validated_data.get('comment')
         if int(cars) >= CARS_MAX_WARNING:
