@@ -20,7 +20,7 @@ else:
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = ['kppshka.ru', 'www.kppshka.ru', 'kppshka']
+ALLOWED_HOSTS = ['kppshka.ru', 'www.kppshka.ru', 'kppshka', '195.133.201.46']
 if DEBUG:
     ALLOWED_HOSTS = []
 
