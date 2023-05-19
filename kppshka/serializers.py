@@ -3,11 +3,12 @@ from .models import Info, Kpp, Name
 from django.core.exceptions import ObjectDoesNotExist
 from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH, CARS_MAX_WARNING, TELEGRAM_BOT_TOKEN, CHAT_ID
 import httpx
+import re
 
 
 def send_telegram_message(msg):
     try:
-        url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=-{CHAT_ID}&text={msg}'
+        url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={msg}'
         httpx.get(url)
     except httpx.RequestError:
         print('An error occurred while requesting Telegram')
@@ -26,7 +27,10 @@ def is_incoming_data_correct(validated_data):
         send_telegram_message(msg)
 
     comment = validated_data['comment']
-    if any(['хуй' in comment, 'хуе' in comment, 'пизд' in comment, 'ёб' in comment, 'еба' in comment, ]):
+    warn_obj = re.search(r'ху[еёй]|п[ие]зд|[ёеб]а|пид[ао]р', comment)
+    if warn_obj:
+        print('Obscene language detected')
+        send_telegram_message(f'КППШка: комент отклонен: {comment}')
         return False
     return True
 
@@ -56,17 +60,22 @@ class InfoParserSerializer(serializers.ModelSerializer):
         except ObjectDoesNotExist:
             raise serializers.ValidationError({'КПП не найден': validated_data["kpp_name"]})
 
-        cars = validated_data['cars_num']
+        cars = validated_data.get('cars_num')
+        comment = validated_data.get('comment')
         if int(cars) >= CARS_MAX_WARNING:
             send_telegram_message(f'КППШка: количество машин в запросе '
-                                  f'телеграм-парсера {cars} превышает {CARS_MAX_WARNING}')
-
+                                  f'телеграм-парсера {cars} превышает {CARS_MAX_WARNING} '
+                                  f'Комент: {comment}'
+                                  )
+        recognition_result = validated_data.get('recognition_result')
+        if recognition_result != 'accept':
+            send_telegram_message(f'КППШка: Коментарий до конца не распознан: {comment}')
         inf = Info.objects.create(
             kpp=kpp,
             cars_num=cars,
             car_type=validated_data.get('car_type'),
-            comment=validated_data.get('comment'),
-            approved=True,
+            comment=comment,
+            approved=recognition_result == 'accept',
             comment_approved=False,
         )
         return inf
@@ -80,6 +89,7 @@ class InfoParserSerializer(serializers.ModelSerializer):
             'cars_num': data['cars_num'],
             'kpp_name': data['kpp_name'],
             'way': data['way'],
+            'recognition_result': data['recognition_result'],
         }
 
         return ret
