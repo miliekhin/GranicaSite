@@ -21,8 +21,8 @@ RUN addgroup --system django \
 
 # Requirements are installed here to ensure they will be cached.
 COPY kppshka/requirements.txt /requirements.txt
-RUN pip3 install --upgrade pip setuptools
-RUN pip install --no-cache-dir -r /requirements.txt \
+RUN pip3 install --upgrade pip setuptools Twisted[tls,http2]
+RUN pip3 install --no-cache-dir -r /requirements.txt \
     && rm /requirements.txt
 
 COPY kppshka/entrypoint.sh /entrypoint.sh

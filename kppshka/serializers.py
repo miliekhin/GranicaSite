@@ -71,7 +71,7 @@ class InfoParserSerializer(serializers.ModelSerializer):
                                   )
         recognition_result = validated_data.get('recognition_result')
         if recognition_result != 'accept':
-            send_telegram_message(f'КППШка: Коментарий до конца не распознан: {comment}')
+            send_telegram_message(f'КППШка: Комент не распознан: {comment}')
         inf = Info.objects.create(
             kpp=kpp,
             cars_num=cars,
