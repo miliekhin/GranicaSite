@@ -1,43 +1,44 @@
 <template>
   <div class="info_card">
-    <div id="id_info_wrp" :class="onStart">
+    <div class="id_info_wrp" :class="onStart">
 
       <div id="id_info_head"
            v-if="current_step"
-           :class="current_step>=7 ? 'center_head':''"
+           :class="current_step >= 8 ? 'center_head':''"
       >
         {{head[current_step]}}{{current_step < 7 ? ':':''}}
       </div>
-      <div v-if="!current_step" id="id_add_data_block">
-        <div id="id_add_data_head">
-          Добавьте свои данные, если вы сейчас находитесь перед границей, и знаете количество машин до шлагбаума
+      <div v-if="!current_step" class="id_add_data_block">
+        <div class="id_add_data_head">
+          Добавьте данные о количестве машин
         </div>
         <kp-button text="ДОБАВИТЬ ДАННЫЕ" @click="startAdder"/>
       </div>
 
       <info-cars :info_data="info_data" v-else-if="current_step===1"/>
-      <radio-selector :info_data="info_data.kpp" v-else-if="current_step===2" :items="static_data.kpp_names" id_name="kpp" @radio_click="onRadioClick" />
-      <radio-selector :info_data="info_data.way" v-else-if="current_step===3" :items="static_data.way" id_name="way" @radio_click="onRadioClick" />
-      <radio-selector :info_data="info_data.car_type" v-else-if="current_step===4" :items="static_data.car_type" id_name="car_type" @radio_click="onRadioClick" />
-      <info-comment :info_data="info_data" v-else-if="current_step===5"/>
-      <info-final :info_data="info_data" :static_data="static_data" v-else-if="current_step===6"/>
-      <after-send  v-else-if="current_step===7" :text="txt_after_send"/>
-      <after-send  v-else-if="current_step===8" :text="txt_block_send"/>
+      <radio-selector :info_data="info_data.kpp" v-else-if="current_step===2" :items="radioItemsPalka" id_name="palka" @radio_click="onRadioClick" />
+      <radio-selector :info_data="info_data.kpp" v-else-if="current_step===3" :items="static_data.kpp_names" id_name="kpp" @radio_click="onRadioClick" />
+      <radio-selector :info_data="info_data.way" v-else-if="current_step===4" :items="static_data.way" id_name="way" @radio_click="onRadioClick" />
+      <radio-selector :info_data="info_data.car_type" v-else-if="current_step===5" :items="static_data.car_type" id_name="car_type" @radio_click="onRadioClick" />
+      <info-comment :info_data="info_data" v-else-if="current_step===6"/>
+      <info-final :info_data="info_data" :static_data="static_data" v-else-if="current_step===7"/>
+      <after-send  v-else-if="current_step === 8" :text="txt_after_send"/>
+      <after-send  v-else-if="current_step === 9" :text="txt_block_send"/>
 
       <div class="btn_panel" id="id_buttons" v-show="current_step">
-        <kp-button text="&laquo; Назад" @click="onBack" v-if="current_step < 7 && current_step"/>
+        <kp-button text="&laquo; Назад" @click="onBack" v-if="current_step < 8 && current_step"/>
         <div id="cross_btn" title="Отмена">
           <kp-button
-              :text="current_step < 7 ? '&Cross;' : 'OK'"
-              @click="onCancel" v-if="current_step < 9 && current_step"
+              :text="current_step < 8 ? '&Cross;' : 'OK'"
+              @click="onCancel" v-if="current_step < 10 && current_step"
           />
         </div>
         <kp-button
-            :text="current_step===6 ? 'Отправить' : 'Далее &raquo;'"
+            :text="current_step === 7 ? 'Отправить' : 'Далее &raquo;'"
             @click="onNext"
-            v-if="current_step < 7 && current_step"
+            v-if="current_step < 8 && current_step"
         />
-        <!--    <kp-button text="Отправить" @click="onSend" v-else-if="current_step===6"/>-->
+        <!--    <kp-button text="Отправить" @click="onSend" v-else-if="current_step===7"/>-->
       </div>
 
     </div>
@@ -45,28 +46,39 @@
 </template>
 
 <script>
-import AfterSend from "./AfterSend.vue"
-import InfoFinal from "./InfoFinal.vue"
-import InfoCars from "./InfoCars.vue"
+import AfterSend from "./InfoSender.vue"
+import InfoFinal from "./InfoDataCheck.vue"
+import InfoCars from "./InfoCarsNumber.vue"
 import RadioSelector from "./RadioSelector.vue"
 import InfoComment from "./InfoComment.vue"
-import KpButton from "./KpButton.vue"
+import KpButton from "../Info/KpButton.vue"
 export default {
   name: "InfoAdder",
-  components:{InfoComment, InfoCars, RadioSelector, KpButton, InfoFinal, AfterSend},
-  props: ['is_inited', "kpps"],
-  data(){
+  components: {
+    InfoComment,
+    InfoCars,
+    RadioSelector,
+    KpButton,
+    InfoFinal,
+    AfterSend
+  },
+  props: [
+    'is_inited',
+    'kpps',
+  ],
+  data() {
     return{
       static_data: {
         kpp_names: this.KPP_NAMES,
         way: ['В сторону РФ', 'В сторону ДНР',],
         car_type: ['Легковые', 'Грузовые',],
       },
-      txt_after_send: 'Вы сделали доброе дело<br><br> Ваша информация будет учтена при следующем обновлении данных',
+      txt_after_send: 'Спасибо! Вы сделали доброе дело.<br><br>Ваши данные будут добавлены на сайт после проверки.',
       txt_block_send: '',
       head: [
         '',
-        'Количество машин',
+        'Количество машин перед КПП',
+        'Число машин',
         'Укажите КПП',
         'Укажите направление',
         'Укажите тип транспорта',
@@ -74,6 +86,13 @@ export default {
         'Проверьте данные',
         'СПАСИБО!',
         'Пожалуйста подождите...',
+      ],
+      radioItemsPalka: [
+          'Много машин',
+          'Очень много машин',
+          'Мало машин',
+          'Машин нет',
+          'Я знаю точное число',
       ],
       current_step: 0,
       onStart: 'onStart',
@@ -103,7 +122,7 @@ export default {
       return "";
     },
     startAdder(){
-      if(!this.is_inited){
+      if(!this.is_inited) {
         this.emitter.emit('fetch_error', 'Сайт ещё не готов к работе.')
         return
       }
@@ -132,7 +151,7 @@ export default {
         if (mins === 1)
           tmin = ' минуту'
         this.txt_block_send = msg + mins + tmin
-        this.current_step = 8
+        this.current_step = 9
         this.onStart = 'afterStart'
         return false
       }
@@ -150,7 +169,7 @@ export default {
     },
     onNext(){
       this.current_step++
-      if( this.current_step === 7){
+      if( this.current_step === 8){
         // if(this.isDataValid())
           this.sendInfo()
       }
@@ -159,10 +178,9 @@ export default {
       this.info_data[obj.name] = obj.val
     },
     isDataValid(){
-      if (this.info_data.cars === this.MAX_CARS)
+      if (this.info_data.cars >= 256) {
         return false
-      if (this.info_data.cars >= 256)
-        return false
+      }
 
       return true
     },
@@ -237,12 +255,13 @@ export default {
     /*width: 320px;*/
     /*max-width: 420px;*/
     /*flex: 0 1 380px;*/
-    max-width: 380px;
+    width: 380px;
     box-sizing: border-box;
     background-color: rgba(31, 56, 69, .7);
     /*background-color: rgba(31, 56, 69, .32);*/
     /*backdrop-filter: blur(8px);*/
-    margin: 20px auto;
+    /*margin: 20px auto;*/
+    height: 383px;
   }
   @media only screen and (max-width: 1024px) {
     .info_card{
@@ -250,23 +269,23 @@ export default {
       margin-top: 0;
     }
   }
-  #id_add_data_head{
+  .id_add_data_head{
     font-size: .8em;
     /*font-weight: 300;*/
     text-align: center;
     color: #ddd;
   }
-  #id_add_data_block{
+  .id_add_data_block{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-around;
     height: 200px;
   }
-  #id_info_wrp{
+  .id_info_wrp{
     /*border: 1px solid white;*/
     display: flex;
-    max-width: 320px;
+    max-width: 350px;
     flex-direction: column;
     /*justify-content: space-between;*/
     /*margin-top: 40px;*/
@@ -289,9 +308,6 @@ export default {
     display: flex;
     justify-content: space-around;
     flex: 1;
-  }
-  #id_butt_send{
-    justify-content: space-around;
   }
   .center_head{
     text-align: center;

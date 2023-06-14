@@ -1,7 +1,15 @@
 from rest_framework import serializers
 from .models import Info, Kpp, Name
 from django.core.exceptions import ObjectDoesNotExist
-from config.settings import CARS_MAX_COUNT, MAX_COMMENT_LENGTH, CARS_MAX_WARNING, TELEGRAM_BOT_TOKEN, CHAT_ID
+from config.settings import (
+    CARS_MAX_COUNT,
+    MAX_COMMENT_LENGTH,
+    CARS_MAX_WARNING,
+    TELEGRAM_BOT_TOKEN,
+    CHAT_ID,
+    FUZZY_CARS_COUNT_MARK,
+    COMPLAINT_MARK,
+)
 import httpx
 import re
 
@@ -15,11 +23,11 @@ def send_telegram_message(msg):
 
 
 def is_incoming_data_correct(validated_data):
-    cars = validated_data['cars_num']
-    if int(cars) >= CARS_MAX_COUNT:
+    cars = int(validated_data['cars_num'])
+    if CARS_MAX_COUNT < cars < FUZZY_CARS_COUNT_MARK:
         return False
 
-    if int(cars) >= CARS_MAX_WARNING:
+    if cars >= CARS_MAX_WARNING:
         car_type = 'Легковые'
         if int(validated_data['car_type']) == 1:
             car_type = 'Грузовые'
@@ -39,7 +47,8 @@ def received_data_validator(data):
     # Здесь проводится валидация и эти данные попадают в create
     if int(data['car_type']) > 1:
         raise serializers.ValidationError({'Неверный тип транспорта:': data['car_type']})
-    if int(data['cars_num']) > CARS_MAX_COUNT:
+    cn = int(data['cars_num'])
+    if CARS_MAX_COUNT < cn < FUZZY_CARS_COUNT_MARK:
         raise serializers.ValidationError({f'Количество машин {data["cars_num"]} больше допустимого': CARS_MAX_COUNT})
     if len(data['comment']) > MAX_COMMENT_LENGTH:
         raise serializers.ValidationError({'Комментарий слишком длинный': len(data['comment'])})
@@ -64,6 +73,7 @@ class InfoParserSerializer(serializers.ModelSerializer):
         if cars < 0:
             cars = 0
         comment = validated_data.get('comment')
+        comment = re.sub(r'"|\n|\r\n?', ' ', comment).replace('  ', ' ')
         if int(cars) >= CARS_MAX_WARNING:
             send_telegram_message(f'КППШка: количество машин в запросе '
                                   f'телеграм-парсера {cars} превышает {CARS_MAX_WARNING} '
@@ -184,24 +194,65 @@ class KppSerializerr(serializers.ModelSerializer):
             'name': kpp.name.name,
             'from_ldnr': kpp.from_ldnr,
         }
-        cars = kpp.info.filter(car_type=0, approved=True).order_by('-added')[:8]
-        trucks = kpp.info.filter(car_type=1, approved=True).order_by('-added')[:8]
+        cars = kpp.info.filter(car_type=0, approved=True, cars_num__lt=FUZZY_CARS_COUNT_MARK).order_by('-added')[:12]
+        trucks = kpp.info.filter(car_type=1, approved=True, cars_num__lt=FUZZY_CARS_COUNT_MARK).order_by('-added')[:12]
         kpp_obj['data_cars'] = get_info_data(cars)
         kpp_obj['data_trucks'] = get_info_data(trucks)
         return kpp_obj
 
 
+def get_cars_fuzzy(cars_count_fuzzy):
+    ret = ''
+    if cars_count_fuzzy == FUZZY_CARS_COUNT_MARK:
+        ret = 'Много машин.'
+    if cars_count_fuzzy == 10001:
+        ret = 'Очень много машин!'
+    if cars_count_fuzzy == 10002:
+        ret = 'Мало машин.'
+
+    return ret
+
+
 class CommentsSerzr(serializers.ModelSerializer):
     header = serializers.SerializerMethodField()
+    comment = serializers.SerializerMethodField()
 
     class Meta:
         model = Info
         fields = ['comment', 'added', 'header']
 
     def get_header(self, info_obj):
+        cars = info_obj.cars_num
+        complaint = ''
         car_type = 'Легковые'
+
         if info_obj.car_type == 1:
             car_type = 'Грузовые'
+
+        if cars >= FUZZY_CARS_COUNT_MARK:
+            if cars == COMPLAINT_MARK:
+                complaint = 'Жалоба! '
+                car_type = ''
+                cars = ''
+            else:
+                if info_obj.comment:
+                    car_type += ': '
+                    cars = get_cars_fuzzy(cars)
+                else:
+                    car_type += '.'
+                    cars = ''
+        else:
+            car_type += ': '
+
         way = f'в сторону {("РФ" if info_obj.kpp.from_ldnr else "ДНР")}'
-        h = f'{info_obj.kpp.name.name}, {way}. {car_type}: {info_obj.cars_num}'
+        h = f'{complaint}{info_obj.kpp.name.name}, {way}. {car_type}{cars}'
         return h
+
+    def get_comment(self, info_obj):
+        cmnt = info_obj.comment
+        cars = info_obj.cars_num
+
+        if FUZZY_CARS_COUNT_MARK <= cars < COMPLAINT_MARK and not cmnt:
+            cmnt = get_cars_fuzzy(cars)
+
+        return cmnt

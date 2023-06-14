@@ -18,13 +18,13 @@ import {util} from "../../../tools.js"
 export default {
   name: "InformerLine",
   components: {InformerGrafik},
-  props: ['line_info', 'car_type', ],
+  props: {
+    carType: { type: String, default: '' },
+    line_info: { type: Object, default: () => ({}) }
+  },
   data(){
     return{
     }
-  },
-  created() {
-    // console.log('line_info: ', this.line_info.info[this.car_type])
   },
   methods:{
   },
@@ -35,9 +35,9 @@ export default {
           'РФ <span class="icon-right-bold"></span> ДНР';
     },
     car_type_index(){
-      if (this.car_type === 'cars')
+      if (this.carType === 'cars')
         return 0
-      if (this.car_type === 'trucks')
+      if (this.carType === 'trucks')
         return 1
     },
     cars_info(){

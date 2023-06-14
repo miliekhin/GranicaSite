@@ -1,11 +1,15 @@
 <template>
 <div class="stolbs-line">
+  <div class="stolb-zero"></div>
   <div v-for="(stolb, i) in grafik_info" :key="stolb+i"
        class="stolb-wrp"
        @mouseover="show_tip($event, i)"
        @mouseleave="hide_tip"
        :ref="'stolbec'+i"
   >
+    <div class="stolb-time">
+      {{stolbTime(i)}}
+    </div>
     <div class="stolb-val-wrp" :class="date_color(i, true)">
       <div class="stolb-val" :class="date_color(i)" :style="stolb_height(i)"/>
     </div>
@@ -17,7 +21,7 @@
 </template>
 
 <script>
-import {util} from "../../../tools.js"
+import { util } from "../../../tools.js"
 export default {
   name: "InformerGrafik",
   props: ['grafik_info', ],
@@ -26,6 +30,10 @@ export default {
     }
   },
   methods: {
+    stolbTime(i) {
+      let dt = util.textDateTime(this.grafik_info[i].added);
+      return dt.time;
+    },
     stolb_height(i) {
       let max = Math.max(...this.grafik_info.map(v=>v.cars_num))
       let k = 42 / max
@@ -41,8 +49,8 @@ export default {
       // if( event.target.className === 'stolb-val' || event.target.className === 'stolb-num' )
       //   el = event.target.parentNode
 
-      let l = el.getBoundingClientRect().left + window.scrollX
-      let t = el.getBoundingClientRect().top + window.scrollY
+      let l = el[0].getBoundingClientRect().left + window.scrollX
+      let t = el[0].getBoundingClientRect().top + window.scrollY
       this.emitter.emit('show_pop', {t, l, dt: this.grafik_info[i].added} )
     },
     date_color(i, wrp=false){
@@ -74,10 +82,33 @@ export default {
   .stolbs-line{
     margin-top: 10px;
     display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    height: 82px;
     justify-content: space-between;
+    align-content: flex-end;
+  }
+  .stolb-zero{
+    height: 82px;
+    width: 100%;
+  }
+  @media only screen and (max-width: 420px) {
+    .stolb-zero{
+      width: 220px;
+    }
+  }
+  @media only screen and (max-width: 377px) {
+    .stolb-zero{
+      width: 175px;
+    }
+  }
+  @media only screen and (max-width: 322px) {
+    .stolb-zero{
+      width: 110px;
+    }
   }
   .stolb-wrp{
-    width: 30px;
+    width: 34px;
   }
   .stolb-val{
     width: 100%;
@@ -115,5 +146,15 @@ export default {
     font-size: .8em;
     width: 100%;
     text-align: center;
+  }
+  .stolb-time{
+    color: rgb(218 240 255);
+    font-family: 'Inconsolata', monospace;
+    transform: scaleY(1.1);
+    font-weight: 200;
+    font-size: .65em;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
   }
 </style>

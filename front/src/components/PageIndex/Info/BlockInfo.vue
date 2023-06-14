@@ -12,27 +12,31 @@
         <div id="car_selector">
           <div id="id_buttons_block">
             <div class="item">
-              <input type="radio" id="id_cars" name="type" value="cars" checked v-model="car_type">
+              <input type="radio" id="id_cars" name="type" value="cars" checked v-model="carType">
               <label for="id_cars">ЛЕГКОВЫЕ</label>
             </div>
             <div class="item">
-              <input type="radio" id="id_trucks" name="type" value="trucks" v-model="car_type">
+              <input type="radio" id="id_trucks" name="type" value="trucks" v-model="carType">
               <label for="id_trucks">ГРУЗОВЫЕ</label>
             </div>
           </div>
           <div id="car_image_wrp">
             <transition name="slide-fade" mode="out-in">
-              <img class="img_avto" width="175" src="../../../assets/car.png" alt="легковые" v-if="car_type === 'cars'">
+              <img class="img_avto" width="175" src="../../../assets/car.png" alt="легковые" v-if="carType === 'cars'">
               <img class="img_avto" src="../../../assets/truck1.png" alt="грузовые" v-else>
             </transition>
           </div>
         </div>
 
-        <informer-wrapper :car_type="car_type" :is_inited="is_inited" :kpps="kppss" :current_day="current_day"/>
-        <info-adder :is_inited="is_inited" :kpps="kppss"/>
+        <informer-wrapper
+          :car-type="carType"
+          :is-inited="isInited"
+          :kpps="kppss"
+          :current-day="currentDay"
+        />
       </div>
       <div class="id_tip"><span class="icon-asterisk"></span> Абсолютная достоверность данных не гарантируется</div>
-      <div class="id_tip"><span class="icon-asterisk"></span> Страницу можно не обновлять - вся информация обновляется автоматически</div>
+      <div class="id_tip"><span class="icon-asterisk"></span> Информация на графиках обновляется автоматически</div>
     </div>
   </div>
   <pop-tip/>
@@ -40,33 +44,31 @@
 
 <script>
 import PopTip from "./PopTip.vue";
-import InfoAdder from "./InfoAdder.vue";
+import InfoAdder from "../InfoAdder/InfoAdder.vue";
 import KpButton from "./KpButton.vue";
 import InformerWrapper from "./InformerWrapper.vue";
 
 export default {
   name: "BlockInfo",
-  props: ['current_day'],
-  components:{
-    InformerWrapper, InfoAdder, KpButton, PopTip,},
-  data(){
+  props: {
+    currentDay: { type: Number, default: 0 },
+    kppss: { type: Array, default: () => [] },
+    isInited: { type: Boolean, default: false },
+  },
+  components: {
+    InformerWrapper,
+    InfoAdder,
+    KpButton,
+    PopTip,
+  },
+  data() {
     return{
-      is_inited: false,
-      car_type: 'cars',
-      fetch_timer: 0,
-      kppss:[],
-    }
+      carType: 'cars',
+      columnsInGrafik: 12,
+    };
   },
   created() {
-    this.zeroKpps()
-  },
-  mounted() {
-    clearInterval(this.fetch_timer)
-    this.fetchData()
-    this.fetch_timer = setInterval(this.fetchData, this.GET_INFO_PERIOD)
-  },
-  beforeUnmount() {
-    clearInterval(this.fetch_timer)
+    this.zeroKpps();
   },
   methods: {
     zeroKpps(){
@@ -74,23 +76,23 @@ export default {
       let kpp_name_id = 0
       let kpp_obj = {}
 
-      function fake_info(car_type){
+      function fake_info(car_type, columns){
         let arr_stolb = []
-        for (let a = 0; a < 8; a++){
+        for (let a = 0; a < columns; a++){
           let added = new Date(new Date().setDate(new Date().getDate()-a))
           // let o = {cars_num: Math.floor(Math.random() * 101), car_type, added}
-          let o = {cars_num: 0, car_type, added}
-          arr_stolb.push(o)
+          let o = { cars_num: 0, car_type, added };
+          arr_stolb.push(o);
         }
-        return arr_stolb.reverse()
+        return arr_stolb.reverse();
       }
 
       for (let i = 0; i < this.KPP_NAMES.length; i++)
       {
         let arr_grafiks = []
         kpp_id++
-        arr_grafiks.push(fake_info(0))
-        arr_grafiks.push(fake_info(1))
+        arr_grafiks.push(fake_info(0, this.columnsInGrafik))
+        arr_grafiks.push(fake_info(1, this.columnsInGrafik))
         kpp_obj = {
           id: kpp_id * 10000,
           name: this.KPP_NAMES[kpp_name_id],
@@ -101,8 +103,8 @@ export default {
 
         kpp_id++
         arr_grafiks = []
-        arr_grafiks.push(fake_info(0))
-        arr_grafiks.push(fake_info(1))
+        arr_grafiks.push(fake_info(0, this.columnsInGrafik))
+        arr_grafiks.push(fake_info(1, this.columnsInGrafik))
         kpp_obj = {
           id: kpp_id * 10000,
           name: this.KPP_NAMES[kpp_name_id],
@@ -114,73 +116,8 @@ export default {
       }
       // console.log(this.kppss)
     },
-    runFetchLoop(){
-      // if(this.DEBUG_MODE)
-      //   return true
 
-      this.fetch_timer = setInterval(this.fetchData, this.GET_INFO_PERIOD)
-      // console.log(this.fetch_timer)
-    },
-    async fetchData() {
-      try {
-        let response = await fetch(this.URL + 'kpp/') // завершается с заголовками ответа
-        let result = await response.json() // читать тело ответа в формате JSON
-        // console.log( result )
-        this.init(result) // разкомитить
-        // this.is_inited = true // удалить
-        if( !this.fetch_timer )
-          this.runFetchLoop()
-
-      } catch (err) {
-        // console.error('fetchData error:', err);
-        clearInterval(this.fetch_timer)
-        // console.log(this.fetch_timer)
-        this.fetch_timer = 0
-        setTimeout(this.fetchData, 4321)
-      }
-    },
-    init(result) {
-      this.kppss.forEach((local_kpp) => {
-        let res_kpp = result.find(rkpp => {
-          return rkpp.name.toUpperCase() === local_kpp.name.toUpperCase() && rkpp.from_ldnr === local_kpp.from_ldnr
-        })
-        // console.log(res_kpp)
-
-        if( res_kpp ){
-          local_kpp.id = res_kpp.id
-          // console.log(local_kpp)
-
-          let dataCars = res_kpp.data_cars;
-          if( dataCars ){
-            dataCars.reverse()
-              dataCars.forEach((res_grafik, j) => {
-                if( res_grafik ){
-                  local_kpp.info[0][j].car_type = res_grafik.car_type
-                  local_kpp.info[0][j].cars_num = res_grafik.cars_num
-                  local_kpp.info[0][j].added = res_grafik.added
-                }
-              })
-          }
-
-          let dataTrucks = res_kpp.data_trucks;
-          if( dataTrucks ){
-            dataTrucks.reverse()
-              dataTrucks.forEach((res_grafik, j) => {
-                if( res_grafik ){
-                  local_kpp.info[1][j].car_type = res_grafik.car_type
-                  local_kpp.info[1][j].cars_num = res_grafik.cars_num
-                  local_kpp.info[1][j].added = res_grafik.added
-                }
-              })
-          }
-        }
-      })
-      // console.log(this.kppss)
-      this.is_inited = true
-    },
-
-  }
-
+  },
 }
 </script>
 
@@ -259,14 +196,18 @@ export default {
     display: flex;
     justify-content: space-between;
     flex: 0 1 380px;
+    padding: 0 5px;
   }
   .img_avto{
     filter: invert(100%);
     -webkit-filter: invert(100%);
     align-self: flex-end;
     margin-right: 10px;
+    user-select: none;
+    -webkit-user-drag: none;
   }
   #car_image_wrp{
+    user-select: none;
     overflow: hidden;
     height: 117px;
     display: flex;
@@ -281,12 +222,9 @@ export default {
   #id_kpp_logo_big {
     margin-left: -124px !important;
   }
-}
-@media only screen and (max-width: 320px) {
-    #slogan_text span:last-of-type{
+  #slogan_text span:last-of-type{
     margin-left: 200px;
   }
-
 }
 @media only screen and (max-width: 420px) {
   #block_slogan{
@@ -300,9 +238,9 @@ export default {
     margin-left: -144px;
   }
 
-  #car_selector {
+/*  #car_selector {
       justify-content: space-around;
-  }
+  }*/
 }
 
 

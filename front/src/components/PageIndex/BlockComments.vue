@@ -6,7 +6,7 @@
           <h6>ЛЮДИ ПИШУТ:</h6>
           <div class="under_h6">комментарии к отправленным данным</div>
         </div>
-        <comments :current_day="current_day"/>
+        <comments :current-day="currentDay"/>
 
     </div>
   </div>
@@ -17,8 +17,12 @@ import Comments from "./Comments.vue"
 
 export default {
   name: "BlockComments",
-  components:{Comments},
-  props: ['current_day'],
+  components:{
+    Comments,
+  },
+  props: {
+    currentDay: { type: Number, default: 0 },
+  },
 }
 </script>
 

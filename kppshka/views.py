@@ -4,13 +4,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Info, Kpp
 from .serializers import KppSerializerr, InfoSerializer, CommentsSerzr, InfoParserSerializer
-from django.db.models import Max, F, Count, Prefetch
+from django.db.models import Max, F, Q, Count, Prefetch
 from django.db.models.functions import Length
 from django.db import connection
 from datetime import datetime
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from config.settings import COMMENTS_FETCH_COUNT
+from config.settings import FUZZY_CARS_COUNT_MARK
 from django.shortcuts import render
 
 
@@ -58,15 +59,15 @@ class Comments(APIView):
         after_date = request.query_params.get('after_date')
         if not after_date:
             qs = Info.objects.annotate(comment_len=Length('comment')).filter(
+                Q(comment_len__gt=0) | Q(cars_num__gte=FUZZY_CARS_COUNT_MARK),
                 approved=True,
-                comment_len__gt=0,
                 comment_approved=True,
             ).order_by('-added')[:COMMENTS_FETCH_COUNT]
         else:
             date = datetime.fromisoformat(after_date.replace("Z", "+00:00"))
             qs = Info.objects.annotate(comment_len=Length('comment')).filter(
+                Q(comment_len__gt=0) | Q(cars_num__gte=FUZZY_CARS_COUNT_MARK),
                 approved=True,
-                comment_len__gt=0,
                 added__gt=date,
                 comment_approved=True,
             ).order_by('-added')[:COMMENTS_FETCH_COUNT]

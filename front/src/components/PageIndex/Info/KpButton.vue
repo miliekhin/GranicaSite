@@ -1,35 +1,37 @@
 <template>
-  <span :class="{isHovering}"
-        @click="isHovering=false"
-        @mouseover="isHovering = true"
-        @mouseout="isHovering = false"
-  >{{ text }}</span>
+  <span
+      :style="styleStr"
+      @click="isHovering = false"
+      @mouseover="isHovering = true"
+      @mouseout="isHovering = false"
+      v-html="text"
+  >
+  </span>
 </template>
 
 <script>
 export default {
   name: "KpButton",
-  props: ['text'],
+  props: ['text', 'styleStr'],
   data(){
     return{
-      // text: 'text'
-      isHovering: false
     }
   },
 
 }
 </script>
 <style scoped>
-  span{
-    /*display: block;*/
+  span {
     text-align: center;
     max-width: 320px;
-    border: 1px solid white;
+    border: 1px solid whitesmoke;
     padding: 8px 15px;
     cursor: pointer;
     transition: .2s;
     user-select: none;
-    font-size: .85em;
+    font-size: 18px;
+    color: whitesmoke;
+    display: inline-block;
   }
   span:hover{
     color: black;

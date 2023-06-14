@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {util} from "../../../tools.js"
+import { util } from "../../../tools.js"
 export default {
   name: "PopTip",
   data(){
@@ -37,7 +37,7 @@ export default {
     this.emitter.on('hide_pop', err => {
       this.show_pop = false;
     });
-  }
+  },
 }
 </script>
 
