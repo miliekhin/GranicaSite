@@ -27,7 +27,7 @@ def is_incoming_data_correct(validated_data):
     if CARS_MAX_COUNT < cars < FUZZY_CARS_COUNT_MARK:
         return False
 
-    if cars >= CARS_MAX_WARNING:
+    if CARS_MAX_WARNING < cars < FUZZY_CARS_COUNT_MARK:
         car_type = 'Легковые'
         if int(validated_data['car_type']) == 1:
             car_type = 'Грузовые'
