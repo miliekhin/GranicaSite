@@ -35,10 +35,12 @@ def is_incoming_data_correct(validated_data):
         send_telegram_message(msg)
 
     comment = validated_data['comment']
-    warn_obj = re.search(r'ху[еёй]|п[ие]зд|[ёеб]а|пид[ао]р', comment)
+    warn_obj = re.search(r'ху[еёй]|п[ие]зд|[ёе]б[ау]|пид[ао]р', comment)
     if warn_obj:
-        print('Obscene language detected')
-        send_telegram_message(f'КППШка: комент отклонен: {comment}')
+        sp = warn_obj.span()
+        mat = comment[sp[0]: sp[1]]
+        print('Obscene language detected:', mat)
+        send_telegram_message(f'КППШка: комент отклонен из-за мата {mat}: {comment}')
         return False
     return True
 
