@@ -65,7 +65,7 @@ export default {
   }
   */
 
-  @media only screen and (max-width: 1024px) {
+  @media only screen and (max-width: 1190px) {
     #block_data_wrapper {
       justify-content: space-around;
     }

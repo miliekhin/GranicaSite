@@ -180,5 +180,10 @@ export default {
       padding: 0 20px;
     }
   }
+  @media only screen and (max-width: 1190px) and (min-width: 1024px){
+    .block_inner{
+      padding: 0 .5%;
+    }
+  }
 
 </style>

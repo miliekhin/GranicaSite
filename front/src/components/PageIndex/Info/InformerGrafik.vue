@@ -92,21 +92,6 @@ export default {
     height: 82px;
     width: 100%;
   }
-  @media only screen and (max-width: 420px) {
-    .stolb-zero{
-      width: 220px;
-    }
-  }
-  @media only screen and (max-width: 377px) {
-    .stolb-zero{
-      width: 175px;
-    }
-  }
-  @media only screen and (max-width: 322px) {
-    .stolb-zero{
-      width: 110px;
-    }
-  }
   .stolb-wrp{
     width: 34px;
   }
@@ -156,5 +141,21 @@ export default {
     width: 100%;
     text-align: center;
     margin-bottom: 4px;
+  }
+
+  @media only screen and (max-width: 420px) {
+    .stolb-zero{
+      width: 220px;
+    }
+  }
+  @media only screen and (max-width: 377px) {
+    .stolb-zero{
+      width: 175px;
+    }
+  }
+  @media only screen and (max-width: 322px) {
+    .stolb-zero{
+      width: 110px;
+    }
   }
 </style>

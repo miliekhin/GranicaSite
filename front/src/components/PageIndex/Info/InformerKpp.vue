@@ -49,7 +49,7 @@ export default {
   }
   .block_data_kpp{
     /*padding: 15px 5px 15px 15px;*/
-    padding: 15px;
+    padding: 10px 15px;
     border: #404040 solid 1px;
     flex: 0 1 585px;
     box-sizing: border-box;
@@ -58,5 +58,10 @@ export default {
     /*backdrop-filter: blur(8px);*/
     margin-bottom: 30px;
   }
-
+  @media only screen and (max-width: 1190px) and (min-width: 1024px){
+    .block_data_kpp{
+      flex: 0 1 545px;
+      margin-bottom: 15px;
+    }
+  }
 </style>

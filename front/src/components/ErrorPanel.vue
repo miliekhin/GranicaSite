@@ -19,7 +19,6 @@ export default {
   name: "ErrorPanel",
   data(){
     return{
-      err: true,
       err_msg: '',
     }
   },

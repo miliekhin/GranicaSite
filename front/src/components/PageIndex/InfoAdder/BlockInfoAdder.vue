@@ -102,5 +102,10 @@ h6{
     padding: 0 20px;
   }
 }
+@media only screen and (max-width: 1024px) {
+  #id_adder {
+    justify-content: space-around;
+  }
+}
 
 </style>

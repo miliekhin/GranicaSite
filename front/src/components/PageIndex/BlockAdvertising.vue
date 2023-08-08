@@ -1,6 +1,7 @@
 <template>
   <div class="block_big" id="id_big_advertising">
     <div class="block_inner">
+      <div id="adv-head">РЕКЛАМА:</div>
       <div id="yandex_rtb_R-A-1245202-1"></div>
     </div>
   </div>
@@ -18,5 +19,7 @@ export default {
     background: #191919;
     overflow: hidden;
   }
-
+  #adv-head{
+    color: #ccc;
+  }
 </style>

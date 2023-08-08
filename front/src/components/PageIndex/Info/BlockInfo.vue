@@ -35,7 +35,7 @@
           :current-day="currentDay"
         />
       </div>
-      <div class="id_tip"><span class="icon-asterisk"></span> Абсолютная достоверность данных не гарантируется</div>
+      <div class="id_tip"><span class="icon-asterisk"></span> Внимание! Точность данных не гарантируется</div>
       <div class="id_tip"><span class="icon-asterisk"></span> Информация на графиках обновляется автоматически</div>
     </div>
   </div>
@@ -127,7 +127,7 @@ export default {
     font-weight: 300;
     margin-bottom: 10px;
     margin-left: 5px;
-    color: #ccc;
+    color: #eee;
   }
   #id_head{
     color: white;
@@ -179,12 +179,6 @@ export default {
     margin-right: 20px;
     line-height: 64px;
   }
-  /*@media only screen and (max-width: 767px) {*/
-  /*  #id_head{*/
-  /*     background-image: url(smaller-image.jpg);*/
-  /*  }*/
-  /*}*/
-
   #car_selector{
     margin-bottom: 20px;
     display: flex;
@@ -290,13 +284,29 @@ export default {
   transition: all .5s ease-out;
 }
 
-/*.slide-fade-leave-active {*/
-/*  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);*/
-/*}*/
-
 .slide-fade-enter-from {
   transform: translateX(100px);
   opacity: 0;
 }
-
+  @media only screen and (max-width: 1190px) {
+    #block_head{
+      display: flex;
+      flex-wrap: wrap;
+    }
+    #car_selector{
+      flex: 1 1 700px;
+    }
+    #id_buttons_block{
+      flex: 0 0 330px;
+    }
+  }
+  @media only screen and (max-width: 1024px) {
+    #car_selector{
+      flex: 0 1 670px;
+      align-self: center;
+    }
+    #block_head{
+      justify-content: space-around;
+    }
+  }
 </style>
